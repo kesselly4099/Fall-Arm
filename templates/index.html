@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fall Detection Data</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+
+
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f8fa;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 8px 15px;
+            border: 1px solid #d1d5da;
+        }
+
+        th {
+            background-color: #e8eaed;
+        }
+
+        .fall {
+            background-color: #ffcccc;
+        }
+
+        #searchBox {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #d1d5da;
+            border-radius: 4px;
+        }
+
+        #refreshButton {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Data from Server</h1>
+
+    <input type="text" id="searchBox" placeholder="Search by Patient Name...">
+    <button id="refreshButton">Refresh Data</button>
+
+    <table border="1" id="dataTable">
+        <thead>
+            <tr>
+                <th>Patient Name</th>
+                <th>Patient ID</th>
+                <th>Location</th>
+                <th>Accelerometer Value</th>
+                <th>Gyroscope Value</th>
+                <th>Timestamp</th>
+                <th>Status</th>
+                
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        function fetchData() {
+            fetch('/get_data')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#dataTable tbody');
+                    tableBody.innerHTML = ''; // Clear the current data
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        let isFall = false;
+
+                        ['patient_name', 'patient_id', 'location_name', 'accelerometer_value', 'gyroscope_value', 'timestamp'].forEach(key => {
+                            const cell = document.createElement('td');
+                            cell.textContent = item[key];
+                            row.appendChild(cell);
+
+                            if (key === 'accelerometer_value' && parseFloat(item[key]) > 10) {
+                                isFall = true;
+                            }
+                        });
+
+                        const statusCell = document.createElement('td');
+                        statusCell.textContent = isFall ? 'Fall' : 'Normal';
+                        row.appendChild(statusCell);
+
+                        if (isFall) {
+                            row.classList.add('fall');
+                        }
+
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching the data:', error);
+                });
+        }
+
+        document.getElementById('refreshButton').addEventListener('click', fetchData);
+
+        // Search Functionality
+        document.getElementById('searchBox').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#dataTable tbody tr');
+            
+            rows.forEach(row => {
+                const patientName = row.querySelector('td:first-child').textContent.toLowerCase();
+                if (patientName.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Initial fetch
+        fetchData();
+    </script>
+</body>
+
+</html>
