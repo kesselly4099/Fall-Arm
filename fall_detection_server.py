@@ -87,7 +87,7 @@ def receive_data():
     if data.get('accelerometer_value', 0) > THRESHOLD or data.get('gyroscope_value', 0) > THRESHOLD:
         email_subject = "Fall Detected!"
         email_body = f"""
-        Hi CareTaker,
+        Hi CareTakers,
         A fall was detected Please ,Patient Name: {data['patient_name']}
         Patient ID: {data['patient_id']}
         Location: {data['location_name']}
