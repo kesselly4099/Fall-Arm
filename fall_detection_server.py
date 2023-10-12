@@ -76,6 +76,8 @@ def send_email(subject, body, to_email):
     server.login(from_email, from_password)
     server.sendmail(from_email, to_email, msg.as_string())
     server.quit()
+    
+    
 
 @app.route('/endpoint', methods=['POST'])
 def receive_data():

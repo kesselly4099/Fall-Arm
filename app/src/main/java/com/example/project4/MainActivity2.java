@@ -529,7 +529,7 @@ public class MainActivity2 extends AppCompatActivity implements SensorEventListe
             sendDataToServer(patientName, patientId, latitude, longitude, "", sensorValues);
             lastDataSentTime = System.currentTimeMillis();
         }
-    }
+    }// the man  fat cayd jjid idbg dugg   gfug ks fof  guf ifg f fig fg gi fiufg f fg jgru ur fn
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
