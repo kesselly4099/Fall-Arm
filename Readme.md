@@ -24,7 +24,7 @@ Installation & Setup ##Backend Server: #Set up a virtual environment. #Install r
 pip install -r requirements.txt #Run the server: python app.py Mobile Application: Import the project 
 into Android Studio and run on a physical device/emulator.
 
-#Contributor
+#Contributors
 
 #Yixuan Liang #KESSELLY kamara #Francis Etang
 
